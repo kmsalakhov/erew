@@ -1,4 +1,4 @@
-package functions
+package task_1
 
 import (
 	"erew/internal/memory"

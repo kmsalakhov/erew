@@ -1,23 +1,22 @@
 package main
 
 import (
+	"erew/internal/functions/task_1"
 	"fmt"
 
-	"erew/internal/functions"
 	"erew/internal/memory"
 )
 
-const workers = 100
+const workers = 10
 
 func main() {
 	m := memory.NewManager(workers)
 
-	// TODO(kasalakhov): think about auto cast (with reflection?)
 	lambda := func(u *memory.Unique, workerId int, args ...interface{}) {
-		functions.SetXToArr(u, workerId, args[0].(*memory.Erew[int]), args[1].([]*memory.Erew[int]))
+		task_1.SetXToArr(u, workerId, args[0].(*memory.Erew[int]), args[1].([]*memory.Erew[int]))
 	}
 
-	x := memory.AllocateMemoryWithData[int](m, 101)
+	x := memory.AllocateMemoryWithData[int](m, 123)
 	array := memory.AllocateMemorySlice[int](m, workers)
 
 	m.Run(lambda, x, array)
