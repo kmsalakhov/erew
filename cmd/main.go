@@ -1,9 +1,9 @@
 package main
 
 import (
-	"erew/internal/functions/task_1"
 	"fmt"
 
+	"erew/internal/functions/task_1"
 	"erew/internal/memory"
 )
 

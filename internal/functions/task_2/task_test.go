@@ -1,9 +1,10 @@
 package task_2
 
 import (
-	"erew/internal/memory"
 	"fmt"
 	"testing"
+
+	"erew/internal/memory"
 )
 
 func TestTask(t *testing.T) {
