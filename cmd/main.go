@@ -1,9 +1,10 @@
 package main
 
 import (
+	"fmt"
+
 	"erew/internal/functions"
 	"erew/internal/memory"
-	"fmt"
 )
 
 const workers = 125
