@@ -2,7 +2,6 @@ package memory
 
 import (
 	"sync"
-	"sync/atomic"
 )
 
 type emptyStruct struct{}
@@ -13,7 +12,6 @@ type Unique = Erew[emptyStruct]
 type WorkerFunc = func(unique *Unique, workerId int, args ...interface{})
 
 type Manager struct {
-	step        *atomic.Int32
 	barrier     *Barrier
 	workerCount int
 }
@@ -22,7 +20,6 @@ func NewManager(workerCount int) *Manager {
 	return &Manager{
 		workerCount: workerCount,
 		barrier:     NewBarrier(workerCount),
-		step:        &atomic.Int32{},
 	}
 }
 
