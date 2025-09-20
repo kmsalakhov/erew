@@ -5,9 +5,9 @@ import (
 	"sync/atomic"
 )
 
-type EmptyStruct struct{}
+type emptyStruct struct{}
 
-type Unique = Erew[EmptyStruct]
+type Unique = Erew[emptyStruct]
 
 // WorkerFunc TODO(kasalakhov): unique is crutch, think about change it
 type WorkerFunc = func(unique *Unique, workerId int, args ...interface{})
@@ -32,7 +32,7 @@ func (m *Manager) Run(f WorkerFunc, args ...interface{}) {
 	for workerId := range m.workerCount {
 		go func() {
 			defer wg.Done()
-			f(AllocateMemory[EmptyStruct](m), workerId, args...)
+			f(AllocateMemory[emptyStruct](m), workerId, args...)
 		}()
 	}
 	wg.Wait()
