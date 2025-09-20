@@ -7,7 +7,7 @@ import (
 	"erew/internal/memory"
 )
 
-const workers = 125
+const workers = 100
 
 func main() {
 	m := memory.NewManager(workers)

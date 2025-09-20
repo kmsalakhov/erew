@@ -1,7 +1,6 @@
 package memory
 
 import (
-	"runtime"
 	"sync/atomic"
 )
 
@@ -40,9 +39,9 @@ func (e *Erew[T]) Read() T {
 	}
 
 	result := e.data
-	e.blockUntilAllHere()
+	e.m.barrier.Wait()
 	e.locked.Store(false)
-	e.blockUntilAllHere()
+	e.m.barrier.Wait()
 
 	return result
 }
@@ -53,29 +52,16 @@ func (e *Erew[T]) Write(newData T) {
 	}
 
 	e.data = newData
-	e.blockUntilAllHere()
+	e.m.barrier.Wait()
 	e.locked.Store(false)
-	e.blockUntilAllHere()
+	e.m.barrier.Wait()
 }
 
 func (e *Erew[EmptyStruct]) Skip(times int) {
 	for range times {
-		e.blockUntilAllHere()
-		e.blockUntilAllHere()
+		e.m.barrier.Wait()
+		e.m.barrier.Wait()
 	}
-}
-
-func (e *Erew[T]) blockUntilAllHere() {
-	step := e.m.step.Load()
-	e.m.stepToCount[step].Add(-1)
-	for {
-		count := e.m.stepToCount[step].Load()
-		if count == 0 {
-			break
-		}
-		runtime.Gosched()
-	}
-	e.m.step.CompareAndSwap(step, step+1)
 }
 
 func (e *Erew[T]) getData() T {

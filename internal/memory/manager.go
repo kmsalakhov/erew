@@ -5,8 +5,6 @@ import (
 	"sync/atomic"
 )
 
-const MaxStepCount = 1_000_000
-
 type EmptyStruct struct{}
 
 type Unique = Erew[EmptyStruct]
@@ -15,22 +13,15 @@ type Unique = Erew[EmptyStruct]
 type WorkerFunc = func(unique *Unique, workerId int, args ...interface{})
 
 type Manager struct {
-	// TODO(kasalakhov): stupid solution, think about changing sync.map to another struct
-	stepToCount map[int32]*atomic.Int32
 	step        *atomic.Int32
+	barrier     *Barrier
 	workerCount int
 }
 
 func NewManager(workerCount int) *Manager {
-	stepToCount := make(map[int32]*atomic.Int32, MaxStepCount)
-	for i := range MaxStepCount {
-		stepToCount[int32(i)] = &atomic.Int32{}
-		stepToCount[int32(i)].Store(int32(workerCount))
-	}
-
 	return &Manager{
-		stepToCount: stepToCount,
 		workerCount: workerCount,
+		barrier:     NewBarrier(workerCount),
 		step:        &atomic.Int32{},
 	}
 }
